@@ -8,8 +8,8 @@ namespace PizzaApp.DataAccess.Data
     {
         public PizzaAppDbContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
 
         public DbSet<Pizza> Pizzas { get; set; }
@@ -18,6 +18,11 @@ namespace PizzaApp.DataAccess.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Configure column type for Price property
+            modelBuilder.Entity<Pizza>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18, 2)");
         }
     }
 }
