@@ -1,5 +1,5 @@
-import { Ingredient } from '../enums/ingredient.enum'
-import { PizzaSize } from '../enums/pizza-size.enum'
+import { Ingredient } from '../enums/ingredient.enum';
+import { PizzaSize } from '../enums/pizza-size.enum';
 
 export interface IPizza {
     id: number

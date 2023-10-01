@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { MatListModule } from '@angular/material/list'
-import { Ingredient } from '../../types/enums/ingredient.enum'
-import { MatChipOption } from '@angular/material/chips'
-import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe'
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatListModule } from '@angular/material/list';
+import { Ingredient } from '../../types/enums/ingredient.enum';
+import { MatChipOption } from '@angular/material/chips';
+import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe';
 
 @Component({
     selector: 'app-ingredients-list',

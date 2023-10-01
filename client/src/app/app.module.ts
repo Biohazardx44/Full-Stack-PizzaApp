@@ -24,4 +24,4 @@ import { HeaderComponent } from './components/header/header.component'
     ],
     bootstrap: [AppComponent], // used for the root component, which is the first component that loads in the app
 })
-export class AppModule {}
+export class AppModule { }

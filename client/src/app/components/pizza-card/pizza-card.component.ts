@@ -1,13 +1,14 @@
-import { IPizza } from '../../types/interfaces/pizza.interface'
-import { Component, Input } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { MatCardModule } from '@angular/material/card'
-import { MatChipsModule } from '@angular/material/chips'
-import { HotPizzaDirective } from '../../directives/hot-pizza.directive'
-import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe'
-import { MatIconModule } from '@angular/material/icon'
-import { PizzaService } from '../../services/pizza.service'
-import { Router } from '@angular/router'
+import { IPizza } from '../../types/interfaces/pizza.interface';
+import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { HotPizzaDirective } from '../../directives/hot-pizza.directive';
+import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe';
+import { MatIconModule } from '@angular/material/icon';
+import { PizzaService } from '../../services/pizza.service';
+import { Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
     selector: 'app-pizza-card',
@@ -19,6 +20,7 @@ import { Router } from '@angular/router'
         HotPizzaDirective,
         NormalizeEnumPipe,
         MatIconModule,
+        MatButtonModule,
     ],
     templateUrl: './pizza-card.component.html',
     styleUrls: ['./pizza-card.component.scss'],
@@ -30,7 +32,7 @@ export class PizzaCardComponent {
     constructor(
         private pizzaService: PizzaService,
         private router: Router
-    ) {}
+    ) { }
 
     selectPizza() {
         // Update the selected ingredients in the pizza service and navigate to the pizza maker page where the ingredients will be pre-selected.

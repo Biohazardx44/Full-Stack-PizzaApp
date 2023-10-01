@@ -1,19 +1,25 @@
-import { Injectable } from '@angular/core'
-import { IPizza } from '../types/interfaces/pizza.interface'
-import { Ingredient } from '../types/enums/ingredient.enum'
-import { BehaviorSubject, Observable } from 'rxjs'
-import { PizzaSize } from '../types/enums/pizza-size.enum'
+import { Injectable } from '@angular/core';
+import { IPizza } from '../types/interfaces/pizza.interface';
+import { Ingredient } from '../types/enums/ingredient.enum';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { PizzaSize } from '../types/enums/pizza-size.enum';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root', // This means that the service will be available in the whole application. It's deprecated, and will be set to 'root' as default in the following version of Angular.
 })
+// An Angular Service is an object (class) that can be used to share data between components.
 export class PizzaService {
+    // BehaviorSubject is a type of Subject, a subject is a special type of Observable that allows values to be multicasted to many Observers.
+    // While using the service as a data store, we create the following three elements:
+    // 1. A BehaviorSubject to store the active order (usually is private so that it can't be manually updated from outside the service).
     private activeOrder: BehaviorSubject<IPizza[]> = new BehaviorSubject<
         IPizza[]
     >([])
 
+    // 2. An Observable to expose the active order value to the components.
     activeOrder$: Observable<IPizza[]> = this.activeOrder.asObservable()
 
+    // 3. A method to update the active order value (more precisely the Behaviour subject).
     updateActiveOrder(order: IPizza[]): void {
         this.activeOrder.next(order)
     }
@@ -29,7 +35,7 @@ export class PizzaService {
         this.selectedIngredients.next(ingredients)
     }
 
-    constructor() {}
+    constructor() { }
 
     updatePizzaTitle(id: number, name: string) {
         // We get the current active order from the BehaviourSubject by using the getValue() method.

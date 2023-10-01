@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { IngredientsListComponent } from '../ingredients-list/ingredients-list.component'
-import { SelectedIngredientsComponent } from '../selected-ingredients/selected-ingredients.component'
-import { Ingredient } from '../../types/enums/ingredient.enum'
-import { PizzaService } from '../../services/pizza.service'
-import { Subscription } from 'rxjs'
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { IngredientsListComponent } from '../ingredients-list/ingredients-list.component';
+import { SelectedIngredientsComponent } from '../selected-ingredients/selected-ingredients.component';
+import { Ingredient } from '../../types/enums/ingredient.enum';
+import { PizzaService } from '../../services/pizza.service';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-ingredients',
@@ -22,9 +22,10 @@ export class IngredientsComponent implements OnInit, OnDestroy {
     subscription: Subscription = new Subscription() // Subscription to the selectedIngredients$ observable, it's used to save
     // the subscription action and to enable us to unsubscribe from it when the component is destroyed.
 
-    constructor(private pizzaService: PizzaService) {}
+    constructor(private pizzaService: PizzaService) { }
 
     ngOnInit() {
+        // subscribe to the selectedIngredients$ observable. Each time the ingredients are updated, the subscription will be notified and the (local property) ingredients will be updated.
         this.subscription = this.pizzaService.selectedIngredients$.subscribe(
             (ingredients) => {
                 this.ingredients = ingredients

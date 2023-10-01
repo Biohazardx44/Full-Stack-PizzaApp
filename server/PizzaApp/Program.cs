@@ -14,6 +14,7 @@ using System.Text;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//gettings app settings and the connectionstring
 var pizzaAppSettings = builder.Configuration.GetSection("PizzaAppSettings");
 builder.Services.Configure<PizzaAppSettings>(pizzaAppSettings);
 var pizzaAppSettingsObject = pizzaAppSettings.Get<PizzaAppSettings>();

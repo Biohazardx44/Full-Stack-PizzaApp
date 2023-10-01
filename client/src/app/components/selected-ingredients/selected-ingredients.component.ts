@@ -7,26 +7,24 @@ import {
     OnChanges,
     AfterViewInit,
     OnDestroy,
-} from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { Ingredient } from '../../types/enums/ingredient.enum'
-import { MatListModule } from '@angular/material/list'
-import { MatButtonModule } from '@angular/material/button'
-import { MatIconModule } from '@angular/material/icon'
-import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe'
-import { MatButtonToggleModule } from '@angular/material/button-toggle'
-import { PizzaSize } from '../../types/enums/pizza-size.enum'
-import { PizzaService } from '../../services/pizza.service'
-import { MatStepper } from '@angular/material/stepper'
-import { IPizza } from '../../types/interfaces/pizza.interface'
-import { calculatePizzaPrice } from '../../helpers/calculate-price.helper'
-import { Subscription } from 'rxjs'
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Ingredient } from '../../types/enums/ingredient.enum';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { PizzaSize } from '../../types/enums/pizza-size.enum';
+import { PizzaService } from '../../services/pizza.service';
+import { MatStepper } from '@angular/material/stepper';
+import { IPizza } from '../../types/interfaces/pizza.interface';
+import { calculatePizzaPrice } from '../../helpers/calculate-price.helper';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-selected-ingredients',
     standalone: true,
-    templateUrl: './selected-ingredients.component.html',
-    styleUrls: ['./selected-ingredients.component.scss'],
     imports: [
         CommonModule,
         MatListModule,
@@ -35,10 +33,12 @@ import { Subscription } from 'rxjs'
         NormalizeEnumPipe,
         MatButtonToggleModule,
     ],
+    templateUrl: './selected-ingredients.component.html',
+    styleUrls: ['./selected-ingredients.component.scss'],
 })
+// Each lifecycle method needs to be specified in "implements" in order to be used
 export class SelectedIngredientsComponent
-    implements OnInit, OnChanges, AfterViewInit, OnDestroy
-{
+    implements OnInit, OnChanges, AfterViewInit, OnDestroy {
     // List of all selected ingredients. Inputs should NEVER be mutated (changed) in the component, rather from the parent component that is passing the data in.
     @Input() selectedIngredients: Ingredient[] = []
     // Event emitter that will emit the ingredient that is to be deleted from the list of selected ingredients.
@@ -53,6 +53,7 @@ export class SelectedIngredientsComponent
         private pizzaService: PizzaService,
         private matStepper: MatStepper
     ) {
+        // Lifecycle method 1. This will only be called once when the CLASS is first initialized.
         console.log('CONSTUCTOR')
     }
 

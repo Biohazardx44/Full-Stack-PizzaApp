@@ -1,9 +1,9 @@
-import { PizzaService } from './../../services/pizza.service'
-import { MatGridListModule } from '@angular/material/grid-list'
-import { Component, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { PizzaCardComponent } from '../pizza-card/pizza-card.component'
-import { IPizza } from '../../types/interfaces/pizza.interface'
+import { PizzaService } from '../../services/pizza.service';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { PizzaCardComponent } from '../pizza-card/pizza-card.component';
+import { IPizza } from '../../types/interfaces/pizza.interface';
 
 @Component({
     selector: 'app-pizza-cards',

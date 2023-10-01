@@ -1,11 +1,12 @@
-import { Component } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { MatInputModule } from '@angular/material/input'
-import { MatIconModule } from '@angular/material/icon'
-import { MatButtonModule } from '@angular/material/button'
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
-import { PizzaService } from '../../services/pizza.service'
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { PizzaService } from '../../services/pizza.service';
 
+// Component for checkout page (third step of the order process)
 @Component({
     selector: 'app-checkout',
     standalone: true,
@@ -26,7 +27,7 @@ export class CheckoutComponent {
         Validators.required // Required field by using Validators.required
     )
 
-    constructor(private pizzaService: PizzaService) {}
+    constructor(private pizzaService: PizzaService) { }
 
     onSubmitOrder() {
         // Submit the order by calling the submitOrder() method of the pizzaService. All the data is stored in the pizzaService

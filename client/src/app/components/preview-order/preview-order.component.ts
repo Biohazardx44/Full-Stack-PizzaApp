@@ -1,19 +1,20 @@
-import { Component, OnInit } from '@angular/core'
-import { CommonModule } from '@angular/common'
-import { MatListModule } from '@angular/material/list'
-import { MatButtonModule } from '@angular/material/button'
-import { MatStepperModule } from '@angular/material/stepper'
-import { MatIconModule } from '@angular/material/icon'
-import { RouterLink } from '@angular/router'
-import { PizzaService } from '../../services/pizza.service'
-import { Observable } from 'rxjs'
-import { IPizza } from '../../types/interfaces/pizza.interface'
-import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe'
-import { MatTooltipModule } from '@angular/material/tooltip'
-import { MatFormFieldModule } from '@angular/material/form-field'
-import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms'
-import { MatInputModule } from '@angular/material/input'
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatStepperModule } from '@angular/material/stepper';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { PizzaService } from '../../services/pizza.service';
+import { Observable } from 'rxjs';
+import { IPizza } from '../../types/interfaces/pizza.interface';
+import { NormalizeEnumPipe } from '../../pipes/normalize-enum.pipe';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
+// Component for previewing order (second step of the order process)
 @Component({
     selector: 'app-preview-order',
     standalone: true,
@@ -41,7 +42,7 @@ export class PreviewOrderComponent implements OnInit {
         Validators.compose([Validators.required, Validators.minLength(3)]) // Validators for title input, title must be at least 3 characters long and is required. Multiple validators are composed together by using the compose() method
     )
 
-    constructor(private pizzaService: PizzaService) {}
+    constructor(private pizzaService: PizzaService) { }
 
     ngOnInit(): void {
         this.activeOrder$ = this.pizzaService.activeOrder$
