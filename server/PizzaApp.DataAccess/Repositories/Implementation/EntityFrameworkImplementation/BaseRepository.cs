@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PizzaApp.DataAccess.Data;
 using PizzaApp.DataAccess.Repositories.Abstraction;
+using PizzaApp.Domain.Entities;
 
 namespace PizzaApp.DataAccess.Repositories.Implementation.EntityFrameworkImplementation
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public abstract class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         private readonly PizzaAppDbContext _pizzaAppDbContext;
 

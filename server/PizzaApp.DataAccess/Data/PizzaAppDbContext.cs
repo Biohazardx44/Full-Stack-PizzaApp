@@ -23,6 +23,10 @@ namespace PizzaApp.DataAccess.Data
             modelBuilder.Entity<Pizza>()
                 .Property(p => p.Price)
                 .HasColumnType("decimal(18, 2)");
+
+            modelBuilder.Entity<Order>()
+                .Property(p => p.OrderPrice)
+                .HasColumnType("decimal(18, 2)");
         }
     }
 }

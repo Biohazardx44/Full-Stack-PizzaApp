@@ -12,7 +12,7 @@ using PizzaApp.DataAccess.Data;
 namespace PizzaApp.DataAccess.Migrations
 {
     [DbContext(typeof(PizzaAppDbContext))]
-    [Migration("20230930180755_Init")]
+    [Migration("20231005144601_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -173,8 +173,8 @@ namespace PizzaApp.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderPrice")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("OrderPrice")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

@@ -61,7 +61,7 @@ namespace PizzaApp.DataAccess.Migrations
                     UserId = table.Column<string>(type: "text", nullable: false),
                     AdressTo = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
-                    OrderPrice = table.Column<int>(type: "integer", nullable: false)
+                    OrderPrice = table.Column<decimal>(type: "numeric(18,2)", nullable: false)
                 },
                 constraints: table =>
                 {

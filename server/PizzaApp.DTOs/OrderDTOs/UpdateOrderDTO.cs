@@ -1,14 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using PizzaApp.Domain.Entities;
+using System.Text.Json.Serialization;
 
-namespace PizzaApp.Domain.Entities
+namespace PizzaApp.DTOs.OrderDTOs
 {
-    public class Order : BaseEntity
+    public class UpdateOrderDTO
     {
-        [ForeignKey("UserId")]
+        [JsonIgnore]
+        public int Id { get; set; }
+        [JsonIgnore]
         public string UserId { get; set; } = string.Empty;
-        [Required]
-        [StringLength(50)]
         public string AddressTo { get; set; } = string.Empty;
         public string? Description { get; set; }
         public decimal OrderPrice { get; set; }

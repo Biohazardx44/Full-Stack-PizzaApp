@@ -170,8 +170,8 @@ namespace PizzaApp.DataAccess.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("text");
 
-                    b.Property<int>("OrderPrice")
-                        .HasColumnType("integer");
+                    b.Property<decimal>("OrderPrice")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("UserId")
                         .IsRequired()

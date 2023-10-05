@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using PizzaApp.Domain.Entities;
+using PizzaApp.DTOs.OrderDTOs;
+using PizzaApp.DTOs.PizzaDTOs;
 using PizzaApp.DTOs.UserDTOs;
 
 namespace PizzaApp.Mappers.MappersConfig
@@ -8,9 +10,20 @@ namespace PizzaApp.Mappers.MappersConfig
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, LoginUserDTO>().ReverseMap();
-            CreateMap<User, RegisterUserDTO>().ReverseMap();
+            // User Mapping
             CreateMap<User, UserDTO>().ReverseMap();
+            CreateMap<User, RegisterUserDTO>().ReverseMap();
+            CreateMap<User, LoginUserDTO>().ReverseMap();
+
+            // Pizza Mapping
+            CreateMap<Pizza, PizzaDTO>().ReverseMap();
+            CreateMap<Pizza, AddPizzaDTO>().ReverseMap();
+            CreateMap<Pizza, UpdatePizzaDTO>().ReverseMap();
+
+            // Order Mapping
+            CreateMap<Order, OrderDTO>().ReverseMap();
+            CreateMap<Order, AddOrderDTO>().ReverseMap();
+            CreateMap<Order, UpdateOrderDTO>().ReverseMap();
         }
     }
 }
