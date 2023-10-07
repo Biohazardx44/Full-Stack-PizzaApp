@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using PizzaApp.Domain.Entities;
-using PizzaApp.DTOs.PizzaDTOs;
+using PizzaApp.DTOs.OrderDTOs;
 using PizzaApp.Services.Abstraction;
-using PizzaApp.Shared.CustomExceptions.PizzaExceptions;
+using PizzaApp.Shared.CustomExceptions.OrderExceptions;
 using PizzaApp.Shared.CustomExceptions.ServerExceptions;
 using System.Security.Claims;
 
@@ -13,26 +13,26 @@ namespace PizzaApp.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class PizzaController : BaseController
+    public class OrderController : BaseController
     {
-        private readonly IPizzaService _pizzaService;
+        private readonly IOrderService _orderService;
         private readonly UserManager<User> _userManager;
 
-        public PizzaController(IPizzaService pizzaService, UserManager<User> userManager)
+        public OrderController(IOrderService orderService, UserManager<User> userManager)
         {
-            _pizzaService = pizzaService;
+            _orderService = orderService;
             _userManager = userManager;
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPizzas()
+        public async Task<IActionResult> GetAllOrders()
         {
             try
             {
-                var response = await _pizzaService.GetAllPizzasAsync();
+                var response = await _orderService.GetAllOrdersAsync();
                 return Response(response);
             }
-            catch (PizzaDataException e)
+            catch (OrderDataException e)
             {
                 return BadRequest(e.Message);
             }
@@ -43,14 +43,14 @@ namespace PizzaApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPizzaById(int id)
+        public async Task<IActionResult> GetOrderById(int id)
         {
             try
             {
-                var response = await _pizzaService.GetPizzaByIdAsync(id);
+                var response = await _orderService.GetOrderByIdAsync(id);
                 return Response(response);
             }
-            catch (PizzaNotFoundException e)
+            catch (OrderNotFoundException e)
             {
                 return BadRequest(e.Message);
             }
@@ -61,15 +61,15 @@ namespace PizzaApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePizza([FromBody] AddPizzaDTO addPizzaDTO)
+        public async Task<IActionResult> CreateOrder([FromBody] AddOrderDTO addOrderDTO)
         {
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var response = await _pizzaService.CreatePizzaAsync(userId, addPizzaDTO);
+                var response = await _orderService.CreateOrderAsync(userId, addOrderDTO);
                 return Response(response);
             }
-            catch (PizzaDataException e)
+            catch (OrderDataException e)
             {
                 return BadRequest(e.Message);
             }
@@ -80,15 +80,15 @@ namespace PizzaApp.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePizza(int id, [FromBody] UpdatePizzaDTO updatePizzaDto)
+        public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateOrderDTO updatedOrderDto)
         {
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var response = await _pizzaService.UpdatePizzaAsync(userId, id, updatePizzaDto);
+                var response = await _orderService.UpdateOrderAsync(userId, id, updatedOrderDto);
                 return Response(response);
             }
-            catch (PizzaDataException e)
+            catch (OrderDataException e)
             {
                 return BadRequest(e.Message);
             }
@@ -99,15 +99,15 @@ namespace PizzaApp.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePizza(int id)
+        public async Task<IActionResult> DeleteOrder(int id)
         {
             try
             {
                 var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-                var response = await _pizzaService.DeletePizzaAsync(userId, id);
+                var response = await _orderService.DeleteOrderAsync(userId, id);
                 return Response(response);
             }
-            catch (PizzaDataException e)
+            catch (OrderDataException e)
             {
                 return BadRequest(e.Message);
             }

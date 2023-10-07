@@ -8,6 +8,7 @@ using PizzaApp.Shared.CustomExceptions.UserExceptions;
 using PizzaApp.Shared.Requests;
 using PizzaApp.Shared.Responses;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace PizzaApp.Services.UserServices.Implementation
 {
@@ -24,11 +25,15 @@ namespace PizzaApp.Services.UserServices.Implementation
             _mapper = mapper;
         }
 
-        public async Task<Response> DeleteUserAsync(string id)
+        public async Task<Response> DeleteUserAsync(string id, ClaimsPrincipal userClaims)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return new Response("User not found");
+                return new Response("User not found!");
+
+            var userIdClaim = userClaims.FindFirst(JwtRegisteredClaimNames.Sub);
+            if (userIdClaim == null || userIdClaim.Value != id)
+                return new Response("You are not authorized to delete this user!");
 
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
@@ -40,7 +45,11 @@ namespace PizzaApp.Services.UserServices.Implementation
         public async Task<Response> GetAllUsersAsync()
         {
             var response = new Response<List<UserDTO>>();
+
             var users = await _userManager.Users.ToListAsync();
+            if (users.Count == 0)
+                throw new UserDataException("No users found!");
+
             var userDtos = _mapper.Map<List<UserDTO>>(users);
 
             response.Result = userDtos;
@@ -52,32 +61,11 @@ namespace PizzaApp.Services.UserServices.Implementation
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return new Response<UserDTO>("User not found");
+                return new Response<UserDTO>("User not found!");
 
             var userDto = _mapper.Map<UserDTO>(user);
 
             return new Response<UserDTO>(userDto);
-        }
-
-        public async Task<Response<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
-        {
-            ValidateLoginUserRequest(loginUserRequest);
-
-            var user = await _userManager.FindByNameAsync(loginUserRequest.Username);
-            if (user == null)
-                return new("User does not exist");
-
-            var passwordIsValid = await _userManager.CheckPasswordAsync(user, loginUserRequest.Password);
-            if (!passwordIsValid)
-                return new("Invalid password");
-
-            var token = await _tokenService.GenerateTokenAsync(user);
-
-            return new Response<LoginUserResponse>(new LoginUserResponse
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(token),
-                ValidTo = token.ValidTo
-            });
         }
 
         public async Task<Response<RegisterUserResponse>> RegisterUserAsync(RegisterUserRequest registerUserRequest)
@@ -86,7 +74,7 @@ namespace PizzaApp.Services.UserServices.Implementation
 
             var existingUser = await _userManager.FindByNameAsync(registerUserRequest.Username);
             if (existingUser != null)
-                return new Response<RegisterUserResponse>($"The username {registerUserRequest.Username} is already in use!");
+                return new Response<RegisterUserResponse>($"The username '{registerUserRequest.Username}' is already in use by another user!");
 
             var user = new UserDTO { UserName = registerUserRequest.Username, Email = registerUserRequest.Email };
             var result = await _userManager.CreateAsync(user, registerUserRequest.Password);
@@ -102,11 +90,32 @@ namespace PizzaApp.Services.UserServices.Implementation
             });
         }
 
+        public async Task<Response<LoginUserResponse>> LoginUserAsync(LoginUserRequest loginUserRequest)
+        {
+            ValidateLoginUserRequest(loginUserRequest);
+
+            var user = await _userManager.FindByNameAsync(loginUserRequest.Username);
+            if (user == null)
+                return new("User does not exist!");
+
+            var passwordIsValid = await _userManager.CheckPasswordAsync(user, loginUserRequest.Password);
+            if (!passwordIsValid)
+                return new("Invalid password!");
+
+            var token = await _tokenService.GenerateTokenAsync(user);
+
+            return new Response<LoginUserResponse>(new LoginUserResponse
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(token),
+                ValidTo = token.ValidTo
+            });
+        }
+
         public async Task<Response<UserDTO>> UpdateUserAsync(string id, UserDTO updatedUser)
         {
             var user = await _userManager.FindByIdAsync(id);
             if (user == null)
-                return new Response<UserDTO>("User not found");
+                return new Response<UserDTO>("User not found!");
 
             ValidateUserInput(updatedUser);
 
@@ -134,17 +143,17 @@ namespace PizzaApp.Services.UserServices.Implementation
             if (string.IsNullOrWhiteSpace(registerUserRequest.Username))
                 throw new UserDataException("Username is a required field!");
 
-            if (string.IsNullOrWhiteSpace(registerUserRequest.Email))
-                throw new UserDataException("Email is a required field!");
-
             if (string.IsNullOrWhiteSpace(registerUserRequest.Password))
                 throw new UserDataException("Password is a required field!");
 
-            if (registerUserRequest.Username.Length < 5 || registerUserRequest.Username.Length > 30)
-                throw new UserDataException("Username must be between 5 and 30 characters long!");
+            if (string.IsNullOrWhiteSpace(registerUserRequest.Email))
+                throw new UserDataException("Email is a required field!");
 
-            if (registerUserRequest.Password.Length < 5 || registerUserRequest.Password.Length > 30)
-                throw new UserDataException("Password must be between 5 and 30 characters long!");
+            if (registerUserRequest.Username.Length < 5 || registerUserRequest.Username.Length > 50)
+                throw new UserDataException("Username must be between 5 and 50 characters long!");
+
+            if (registerUserRequest.Password.Length < 5 || registerUserRequest.Password.Length > 50)
+                throw new UserDataException("Password must be between 5 and 50 characters long!");
 
             if (registerUserRequest.Email.Length > 100)
                 throw new UserDataException("Email cannot exceed 100 characters!");
@@ -164,20 +173,23 @@ namespace PizzaApp.Services.UserServices.Implementation
 
         private void ValidateUserInput(UserDTO updatedUser)
         {
-            if (string.IsNullOrWhiteSpace(updatedUser.UserName))
-                throw new UserDataException("Username is a required field!");
+            if (!string.IsNullOrWhiteSpace(updatedUser.UserName))
+            {
+                if (updatedUser.UserName.Length < 5 || updatedUser.UserName.Length > 50)
+                    throw new UserDataException("Username must be between 5 and 50 characters long!");
+            }
 
-            if (string.IsNullOrWhiteSpace(updatedUser.Email))
-                throw new UserDataException("Email is a required field!");
+            if (!string.IsNullOrWhiteSpace(updatedUser.Email))
+            {
+                if (updatedUser.Email.Length > 100)
+                    throw new UserDataException("Email cannot exceed 100 characters!");
 
-            if (updatedUser.UserName.Length < 5 || updatedUser.UserName.Length > 30)
-                throw new UserDataException("Username must be between 5 and 30 characters long!");
+                if (!updatedUser.Email.Contains("@") || updatedUser.Email.IndexOf("@") == updatedUser.Email.Length - 1)
+                    throw new UserDataException("Invalid email format. Email must contain '@' and at least one character after it!");
+            }
 
-            if (updatedUser.Email.Length > 100)
-                throw new UserDataException("Email cannot exceed 100 characters!");
-
-            if (!updatedUser.Email.Contains("@") || updatedUser.Email.IndexOf("@") == updatedUser.Email.Length - 1)
-                throw new UserDataException("Invalid email format. Email must contain '@' and at least one character after it!");
+            if (string.IsNullOrWhiteSpace(updatedUser.UserName) && string.IsNullOrWhiteSpace(updatedUser.Email))
+                throw new UserDataException("No details provided. Please fill in at least one field!");
         }
     }
 }

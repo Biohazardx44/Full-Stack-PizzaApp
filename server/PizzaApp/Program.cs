@@ -1,74 +1,28 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using PizzaApp.DataAccess.Data;
-using PizzaApp.Domain.Entities;
 using PizzaApp.Helpers.DependencyInjectionContainer;
+using PizzaApp.Helpers.Extensions;
 using PizzaApp.Mappers.MappersConfig;
 using PizzaApp.Shared.Settings;
-using Swashbuckle.AspNetCore.Filters;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//gettings app settings and the connectionstring
 var pizzaAppSettings = builder.Configuration.GetSection("PizzaAppSettings");
+
+builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly)
+    .AddPostgreSQLDbContext(pizzaAppSettings)
+    .AddSwagger()
+    .AddIdentity()
+    .AddCors()
+    .AddAuthentication()
+    .AddJWT(pizzaAppSettings);
+
 builder.Services.Configure<PizzaAppSettings>(pizzaAppSettings);
 var pizzaAppSettingsObject = pizzaAppSettings.Get<PizzaAppSettings>();
 
 var connectionString = pizzaAppSettingsObject.ConnectionString;
-
-//Setting db context with connection string
-builder.Services.AddDbContext<PizzaAppDbContext>(option =>
-option.UseNpgsql(connectionString));
-
-//Adding Identity
-builder.Services.AddIdentityCore<User>(option =>
-{
-    option.SignIn.RequireConfirmedAccount = true;
-})
-    .AddEntityFrameworkStores<PizzaAppDbContext>()
-    .AddDefaultTokenProviders();
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAutoMapper(typeof(AutoMapperProfile).Assembly);
-builder.Services.AddSwaggerGen(c =>
-{
-    c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-    {
-        Description = "JWT Authorization header using the Bearer scheme, e.g. Bearer {token}",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Type = SecuritySchemeType.ApiKey
-    });
-
-    c.OperationFilter<SecurityRequirementsOperationFilter>();
-});
-
-builder.Services.AddAuthentication(option =>
-{
-    option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-            GetBytes(builder.Configuration.GetSection("PizzaAppSettings:Token").Value)),
-            ValidateIssuer = false,
-            ValidateAudience = false,
-        };
-    });
-
-builder.Services.AddCors(options => options.AddPolicy("myPolicy", policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 
 builder.Services.InjectServices();
 builder.Services.InjectRepositories();
@@ -88,6 +42,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors("myPolicy");
+app.UseCors("CORSPolicy");
 
 app.Run();

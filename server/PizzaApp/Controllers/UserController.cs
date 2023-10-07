@@ -27,10 +27,11 @@ namespace PizzaApp.Controllers
             {
                 var request = new RegisterUserRequest
                 {
-                    Email = registerUserDTO.Email,
-                    Password = registerUserDTO.Password,
                     Username = registerUserDTO.Username,
+                    Password = registerUserDTO.Password,
+                    Email = registerUserDTO.Email
                 };
+
                 var response = await _userService.RegisterUserAsync(request);
                 return Response(response);
             }
@@ -48,9 +49,10 @@ namespace PizzaApp.Controllers
             {
                 var request = new LoginUserRequest
                 {
-                    Password = loginUserDTO.Password,
                     Username = loginUserDTO.Username,
+                    Password = loginUserDTO.Password
                 };
+
                 var response = await _userService.LoginUserAsync(request);
                 return Response(response);
             }
@@ -66,6 +68,7 @@ namespace PizzaApp.Controllers
             var response = await _userService.GetAllUsersAsync();
             if (response.IsSuccessful)
                 return Ok(response);
+
             return BadRequest(response.Errors);
         }
 
@@ -75,24 +78,38 @@ namespace PizzaApp.Controllers
             var response = await _userService.GetUserByIdAsync(id);
             if (response.IsSuccessful)
                 return Ok(response.Result);
+
             return NotFound(response.Errors);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UserDTO updatedUser)
         {
-            var response = await _userService.UpdateUserAsync(id, updatedUser);
-            if (response.IsSuccessful)
-                return Ok(response.Result);
-            return BadRequest(response.Errors);
+            try
+            {
+                var response = await _userService.UpdateUserAsync(id, updatedUser);
+                if (response.IsSuccessful)
+                    return Ok(response.Result);
+
+                if (response.Errors != null && response.Errors.Any())
+                    return BadRequest(response.Errors);
+
+                return BadRequest("Failed to update user!");
+            }
+            catch (UserDataException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var response = await _userService.DeleteUserAsync(id);
+            var userClaims = HttpContext.User;
+            var response = await _userService.DeleteUserAsync(id, userClaims);
             if (response.IsSuccessful)
-                return Ok($"{nameof(DeleteUser)} was deleted!");
+                return Ok("Account was deleted successfully!");
+
             return BadRequest(response.Errors);
         }
     }

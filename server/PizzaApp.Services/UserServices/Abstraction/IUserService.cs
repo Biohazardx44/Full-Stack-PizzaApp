@@ -1,6 +1,7 @@
 ﻿using PizzaApp.DTOs.UserDTOs;
 using PizzaApp.Shared.Requests;
 using PizzaApp.Shared.Responses;
+using System.Security.Claims;
 
 namespace PizzaApp.Services.UserServices.Abstraction
 {
@@ -11,6 +12,6 @@ namespace PizzaApp.Services.UserServices.Abstraction
         Task<Response> GetAllUsersAsync();
         Task<Response<UserDTO>> GetUserByIdAsync(string id);
         Task<Response<UserDTO>> UpdateUserAsync(string id, UserDTO updatedUser);
-        Task<Response> DeleteUserAsync(string id);
+        Task<Response> DeleteUserAsync(string id, ClaimsPrincipal userClaims);
     }
 }
