@@ -2,14 +2,23 @@
 {
     public enum Ingridients
     {
-        Salami = 1,
-        Oregano = 2,
-        Tomatoes = 3,
+        TomatoSauce = 0,
+        Mozzarella = 1,
+        Ham = 2,
+        Oregano = 3,
         Garlic = 4,
-        Paprika = 5,
-        Onion = 6,
-        Mozzarella = 7,
-        Cheddar = 8,
-        Pepperoni = 9
+        Onion = 5,
+        Mushrooms = 6,
+        Parmesan = 7,
+        Basil = 8,
+        Pepperoni = 9,
+        Egg = 10,
+        ChilliPepper = 11,
+        SourCream = 12,
+        Bacon = 13,
+        BlueCheese = 14,
+        Gorgonzola = 15,
+        Tuna = 16,
+        Olives = 17
     }
 }
