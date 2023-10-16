@@ -39,6 +39,7 @@ export class RegisterComponent implements OnDestroy {
         ),
     })
 
+    // Getters for form validation
     get hasNameRequiredError(): boolean {
         return !!(
             this.registerForm.get('username')?.hasError('required') &&
@@ -84,7 +85,7 @@ export class RegisterComponent implements OnDestroy {
     onRegister() {
         this.subscription = this.authService
             .register(this.registerForm.value as IRegister)
-            .subscribe()
+            .subscribe() // we have to subscribe to the observable to execute it
     }
 
     ngOnDestroy() {
