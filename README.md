@@ -4,7 +4,7 @@
 
 ### About Full-Stack PizzaApp:
 
-**Full-Stack PizzaApp** was made using .NET7, PostgreSQL & Angular.
+**Full-Stack PizzaApp** was made using .NET7, PostgreSQL & Angular.  
 WORK IN PROGRESS. About README will be released once all features have been added and the app is out of Beta testing!
 
 ### Key Features:
