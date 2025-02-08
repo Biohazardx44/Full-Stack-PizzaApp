@@ -12,7 +12,7 @@ using PizzaApp.DataAccess.Data;
 namespace PizzaApp.DataAccess.Migrations
 {
     [DbContext(typeof(PizzaAppDbContext))]
-    [Migration("20231007210512_Init")]
+    [Migration("20250107135905_Init")]
     partial class Init
     {
         /// <inheritdoc />
